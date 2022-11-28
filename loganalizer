@@ -1,0 +1,56 @@
+def print_stats():                                                  # Function to print statistics
+            notices = 0                                             # Variable to count the number of notices
+            error = 0                                               # Variable to count the number of errors
+            for line in logfile:                                    # Loop through each line in the file
+                parts=line.split('] [')                             # Split the line at this pattern
+                if parts[1].startswith('notice'):                   # If this part starts with 'notice', increase the 'notice' count
+                    notices += 1
+                elif parts[1].startswith('error'):                  # If it starts with 'error', increase the 'error' count
+                    error += 1
+            print('errors ', error)                                 # Print the count for errors and notices
+            print('notice ', notices)
+        
+
+def print_error():                                                  # Function to Print errors
+    for line in logfile:                                            # Loop through each line in the log file
+        parts=line.partition(' [error] ')                           # Partition the line at the [error] delimiter
+        if parts[1] == ' [error] ':                                 # If part 1 is '[error]'
+            print(parts[0] + ' ' + parts[2])                        # Print part 0 and 2 which are the date and the error message
+        else:                                                       # Otherwise, if pattern not found in string, continue in the loop 
+            continue
+
+
+def print_notice():                                                 # Function to Print notifications
+    for line in logfile:                                            # Loop through each line in the log file
+        parts=line.partition(' [notice] ')                          # Partition the line at the [notice] delimeter
+        if parts[1] == ' [notice] ':                                # If part 2 is '[notice]'
+            print(parts[0] + ' ' + parts[2])                        # Print part 0 date and 2 the error message
+        else:                                                       # If patter not found, continue wihtout printing
+            continue
+
+ 
+if __name__=='__main__':                                            # Check if running as main program or imported as module.
+    if len(sys.argv) == 3:                                          # Check for required arguments: (file & command).
+        logfilepath = sys.argv[1]                                   # Var to store path to the log file to analyze
+        command = sys.argv[2].lower()                               # Name of the command to run on the log file
+        try:                                                        # Try to open file for reading and pass to function.
+            with open(logfilepath, encoding='utf-8') as logfile:
+                if command.startswith('stat'):                      # Check command name and call function for that command.
+                    print_stats()
+                elif command.startswith('err'):
+                    print_error()
+                elif command.startswith('not'):
+                    print_notice()
+                else:
+                    print('Unknown command: ' + command)           # If no match found for command, print message and exit.
+                    exit()
+        except FileNotFoundError:                                 
+            print('ERROR: FILE NOT FOUND: ' + logfilepath)
+        except IndexError:                                         # Index error can occure if line.split fails. 
+            print('Index Error! Unknown log file format')
+    else:                                                          # If we didn't get the required number of commands,
+        print()                                                    # Print a usage message and exit.
+        print('Usage: loganalyzer requires 2 arguments: A log file to analize and an operation to perform.')
+        print('Syntax: loganalyzer.py {path-to-logfile} {statistics | error | notice}')
+        print()
+        exit()
