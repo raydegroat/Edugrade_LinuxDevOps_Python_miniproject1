@@ -1,4 +1,4 @@
-# Edugrade - Linux Devops Engineering - Python mini project 1 - By Ray de Groat
+# Edugrade, Linux Devops Eng, Python project 1 - By Ray de Groat
 
 A mini project assignment for the Python moduel at Edugrade's Linux DevOps Engineering course. Instructions for the assignment follows.
 
